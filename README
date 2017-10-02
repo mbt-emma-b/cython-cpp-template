@@ -1,6 +1,9 @@
-This is a self-contained example of how to wrap C++ with Cython.
+This is a self-contained example and tutorial of how to wrap C++ with Cython. The original example contains more details on the proper wrapping practices and can be found at: https://github.com/sturlamolden/cython-cpp-test
 
-Assuming you have Python, Cython, Git and a C++ compiler 
+---
+
+# Running the example
+To run the example, assuming you have Python, Cython, Git and a C++ compiler 
 installed, all you need to do is:
 
 $ git clone https://github.com/sturlamolden/cython-cpp-test
@@ -11,7 +14,47 @@ $ python setup.py build_ext --inplace
 
 $ python test.py
 
-Written by Sturla Molden, Dec. 2014
+---
 
-Use at your own risk.
-This code is in the public domain.
+# Writing your own bridge
+To write your own bridges, use the present example as reference and follow the following steps:
+	1. Create MyClass.h, MyClass.cpp and MyClass.pyd files for, respectively, the C++ class declaration, the C++ class implementation and the Cython class declaration. Those three files must be in the same folder.
+	2. Put your C++ class declaration in MyClass.h
+		* For now, template class MyClass<T> cannot be bridged with Cython
+		* Constant reference types must be declared as *const `type`&* and not *`type` const&*
+	3. Put your C++ class definition in MyClass.cpp
+		* Constant reference types must be declared as *const `type`&* and not *`type` const&*
+	4. Present your class to Cython in MyClass.pxd. This is more or less a copy of the C++ declaration, with the following changes:
+		* Present only those methods and attributes you need access to from the Python code. For example, helper methods called only by other class methods do not need to be presented to Cython.
+		* The declaration is done in a *cdef extern from "MyClass.h":* Cython block -see example. This is where the namespace is specified if the class was defined in a specific namespace
+		* Write *except +* decorators after each constructor to enable error management
+		* Destructors need not be presented to Cython -to the best of my knowledge-
+		* Cython can use structures from the C++ standard library. For each C++ module included in MyClass.h, cimport it before the cdef extern block. For example, *from libcpp.vector cimport vector*
+		* In method declarations, specify only the type of the arguments, without names
+		* C++ template classes imported from the standard libary use a [type] syntax instead of <type>. For example, *vector[int]* or *pair[double, double]*
+	5. Create a PyMyClass.pyx wrapper file in the same directory
+		* Do not name the wrapper class -and corresponding file- the same as the C++ class!
+		* In the first comment block, before any Cython code, add the distutils headers for compilation -see example-
+		* Cimport the class declaration: *from MyClass cimport MyClass*
+		* Cimport any neccessary C++ standard library bridge, for example, *from libcpp.vector cimport vector*
+	6. Write a Cython *cdef PyMyClass:* class definition block in PyMyClass.pyx.
+		* Create a pointer to an instance of MyClass -see example-
+		* For each method and attribute presented in MyClass.pxd, write the necessary wrapping functions -see example for details-
+		* Add memory and context management functions -those not coresponding to any method or attribute in the example-
+	7. The wrapper class can be used from .pyx files and .py files
+		* Do not forget to import the module: *from PyMyClass import PyMyClass*
+		* If your C++ and wrapper files are not in the same directory as those new files, be sure to specify the correct path in the import -for example see [this](https://stackoverflow.com/questions/8953844/import-module-from-subfolder) stackoverflow question-
+		* For .pyx files, in the first comment block, before any Cython code, add the distutils headers for compilation -see example-
+	8. Create a setup.py file
+		* Copy the setup.py from the example
+		* A single setup file is necessary for all wrappers
+		* Specify the path to all of your .pyx files in the cythonize function: *cythonize(['filename.pyx', 'path/filename2.pyx'])*
+	9. Compile and run
+		* In a Shell terminal, move to the directory containing the setup.py
+		* Run *python setup.py build_ext --inplace*. This compile the C++ code and the Cython wrapper as a Python module
+		* Run whatever python script you have created in step 7
+
+
+To go further, the [documentation provided by Cython](http://cython.readthedocs.io/en/latest/src/userguide/wrapping_CPlusPlus.html) is quite useful.
+
+
