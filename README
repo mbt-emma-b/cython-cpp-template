@@ -30,7 +30,7 @@ To write your own bridges, use the present example as reference and follow the f
 		* Write *except +* decorators after each constructor to enable error management
 		* Destructors need not be presented to Cython -to the best of my knowledge-
 		* Cython can use structures from the C++ standard library. For each C++ module included in MyClass.h, cimport it before the cdef extern block. For example, *from libcpp.vector cimport vector*
-		* In method declarations, specify only the type of the arguments, without names
+		* In method declarations, specify only the type of the arguments, without names -except for inline functions-
 		* C++ template classes imported from the standard libary use a [type] syntax instead of <type>. For example, *vector[int]* or *pair[double, double]*
 	5. Create a PyMyClass.pyx wrapper file in the same directory
 		* Do not name the wrapper class -and corresponding file- the same as the C++ class!
@@ -40,11 +40,13 @@ To write your own bridges, use the present example as reference and follow the f
 	6. Write a Cython *cdef PyMyClass:* class definition block in PyMyClass.pyx.
 		* Create a pointer to an instance of MyClass -see example-
 		* For each method and attribute presented in MyClass.pxd, write the necessary wrapping functions -see example for details-
-		* Add memory and context management functions -those not coresponding to any method or attribute in the example-
+		* Add memory and context management methods -those not coresponding to any method or attribute in the example-
+		* Methods must take *PyMyClass self* as their first argument
 	7. The wrapper class can be used from .pyx files and .py files
 		* Do not forget to import the module: *from PyMyClass import PyMyClass*
 		* If your C++ and wrapper files are not in the same directory as those new files, be sure to specify the correct path in the import -for example see [this](https://stackoverflow.com/questions/8953844/import-module-from-subfolder) stackoverflow question-
 		* For .pyx files, in the first comment block, before any Cython code, add the distutils headers for compilation -see example-
+		* Do not forget to free the class instances by equaling their pointer to None when you're done with them!!
 	8. Create a setup.py file
 		* Copy the setup.py from the example
 		* A single setup file is necessary for all wrappers

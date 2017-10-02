@@ -24,4 +24,15 @@ print("testing with C++ object on the stack")
 test_with_raii()
 print("\n")
 
-
+print("testing wrapped class directly in Python")
+T = PyTestClass()
+T.x = 15
+print("Should be 15:")
+print(T.x)
+print("Should be True:")
+print(T.signOfa())
+T = None
+T = PyTestClass(-3)
+print("Should be False:")
+print(T.signOfa())
+T = None

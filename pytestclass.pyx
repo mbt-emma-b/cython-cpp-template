@@ -4,7 +4,7 @@
 
 
 from testclass cimport TestClass
-
+from libcpp cimport bool
 
 cdef class PyTestClass:
 
@@ -15,18 +15,21 @@ cdef class PyTestClass:
     cdef:
         TestClass *_thisptr
 
-    def __cinit__(PyTestClass self):
+    def __cinit__(PyTestClass self, int a=0):
         # Initialize the "this pointer" to NULL so __dealloc__
         # knows if there is something to deallocate. Do not 
         # call new TestClass() here.
         self._thisptr = NULL
         
-    def __init__(PyTestClass self):
+    def __init__(PyTestClass self, int a=0):
         # Constructing the C++ object might raise std::bad_alloc
         # which is automatically converted to a Python MemoryError
         # by Cython. We therefore need to call "new TestClass()" in
         # __init__ instead of __cinit__.
-        self._thisptr = new TestClass() 
+        if a == 0:
+                self._thisptr = new TestClass()
+        else:
+                self._thisptr = new TestClass(a) 
 
     def __dealloc__(PyTestClass self):
         # Only call del if the C++ object is alive, 
@@ -70,7 +73,12 @@ cdef class PyTestClass:
             self._check_alive()
             self._thisptr.y = <int> value
             
-            
+    
+
+    def signOfa(PyTestClass self):
+        return self._thisptr.signOfa();
+
+        
     def Multiply(PyTestClass self, int a, int b):
         self._check_alive()
         return self._thisptr.Multiply(a,b)
