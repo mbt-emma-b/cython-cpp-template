@@ -1,4 +1,5 @@
 This is a self-contained example and tutorial of how to wrap C++ with Cython. The original example contains more details on the proper wrapping practices and can be found at: https://github.com/sturlamolden/cython-cpp-test
+An additional example with the homemade MBT_Matrix class and a function with a MBT_Matrix as argument has been added in the subfolder MatrixDemo.
 
 ---
 
@@ -35,7 +36,7 @@ To write your own bridges, use the present example as reference and follow the f
 		* C++ template classes imported from the standard libary use a [type] syntax instead of <type>. For example, *vector[int]* or *pair[double, double]*
 	5. Create a PyMyClass.pyx wrapper file in the same directory
 		* Do not name the wrapper class -and corresponding file- the same as the C++ class!
-		* In the first comment block, before any Cython code, add the distutils headers for compilation -see example-
+		* In the first comment block, before any Cython code, add the distutils headers for compilation -see example. The sources header must point to the source files from the location of the setup.py file -see PyCppMatrix.pyx for an example.
 		* Cimport the class declaration: *from MyClass cimport MyClass*
 		* Cimport any neccessary C++ standard library bridge, for example, *from libcpp.vector cimport vector*
 	6. Write a Cython *cdef class PyMyClass:* class definition block in PyMyClass.pyx.
