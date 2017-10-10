@@ -27,6 +27,7 @@ To write your own bridges, use the present example as reference and follow the f
 	4. Present your class to Cython in MyClass.pxd. This is more or less a copy of the C++ declaration, with the following changes:
 		* Present only those methods and attributes you need access to from the Python code. For example, helper methods called only by other class methods do not need to be presented to Cython.
 		* The declaration is done in a *cdef extern from "MyClass.h":* Cython block -see example. This is where the namespace is specified if the class was defined in a specific namespace
+		* The declaration is done in a Cython (Python) syntax
 		* Write *except +* decorators after each constructor to enable error management
 		* Destructors need not be presented to Cython -to the best of my knowledge-
 		* Cython can use structures from the C++ standard library. For each C++ module included in MyClass.h, cimport it before the cdef extern block. For example, *from libcpp.vector cimport vector*
