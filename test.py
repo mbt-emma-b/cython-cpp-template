@@ -1,5 +1,7 @@
 
 from _test import *
+from PyCppMatrix import *
+from PyComputeRelaxIndex import PyComputeRelaxIndex
 
 print("\n\n")
 
@@ -36,3 +38,38 @@ T = PyTestClass(-3)
 print("Should be False:")
 print(T.signOfa())
 T = None
+print("\n")
+
+
+print("testing wrapped matrix class")
+print("float")
+M = PyCppMatrixFloat(4, 2, [2.0, 1.2, 3.4, 9.0, 3.1, 3.9, 5.8, 4.5])
+print("Should be 3.1:")
+print(M.at(2,0))
+print("Should be (4,2)")
+print(M.size())
+print("Should be [3.4, 9.0]")
+print(M.row(1))
+print("Should be [2.0, 3.4, 3.1, 5.8]")
+print(M.column(0))
+M = None
+print("double")
+M = PyCppMatrixDouble(4, 2, [2.0, 1.2, 3.4, 9.0, 3.1, 3.9, 5.8, 4.5])
+print("Should be 3.1:")
+print(M.at(2,0))
+print("Should be (4,2)")
+print(M.size())
+print("Should be [3.4, 9.0]")
+print(M.row(1))
+print("Should be [2.0, 3.4, 3.1, 5.8]")
+print(M.column(0))
+M = None
+print("\n")
+
+print("testing relax index computer")
+C = PyComputeRelaxIndex(4, 2, [2.0, 1.2, 3.4, 9.0, 3.1, 3.9, 5.8, 4.5])
+print("Should be 0.2:")
+print(C.compute({"param": [0.3, 0.123]}, 0.250, 0.12, 0.34))
+C = None
+
+
