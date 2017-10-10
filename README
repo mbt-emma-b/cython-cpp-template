@@ -38,7 +38,7 @@ To write your own bridges, use the present example as reference and follow the f
 		* In the first comment block, before any Cython code, add the distutils headers for compilation -see example-
 		* Cimport the class declaration: *from MyClass cimport MyClass*
 		* Cimport any neccessary C++ standard library bridge, for example, *from libcpp.vector cimport vector*
-	6. Write a Cython *cdef PyMyClass:* class definition block in PyMyClass.pyx.
+	6. Write a Cython *cdef class PyMyClass:* class definition block in PyMyClass.pyx.
 		* Create a pointer to an instance of MyClass -see example-
 		* For each method and attribute presented in MyClass.pxd, write the necessary wrapping functions -see example for details-
 		* Add memory and context management methods -those not coresponding to any method or attribute in the example-
