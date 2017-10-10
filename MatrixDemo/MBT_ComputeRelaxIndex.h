@@ -4,7 +4,7 @@
 //  Created by Fanny Grosselin on 06/01/2017.
 //  Copyright (c) 2017 myBrain Technologies. All rights reserved.
 //
-//  Update: 2017/03/23 by Fanny Grosselin --> Change float by double for the functions not directly used by AndroÔd.
+//  Update: 2017/03/23 by Fanny Grosselin --> Change float by double for the functions not directly used by Andro√Ød.
 //		Fanny Grosselin : 2017/09/05 Change the pathes.
 //		Emma Barme : 2017/10/10 Make dummy for bridging
 
@@ -36,11 +36,11 @@
 float MBT_ComputeRelaxIndex(MBT_Matrix<float> sessionPacket, std::map<std::string, std::vector<float> > parametersFromCalibration, const float sampRate, const float IAFinf, const float IAFsup);
 
 /**
- * Wrapper for Cython bridge
+ * Wrapper for Cython bridge. Must be a class to be bridge-able.
  */
 class MBT_RelaxIndexComputer {
 private:
-	Bridge_MatrixFloat* data;
+	Bridge_MatrixFloat* data; // Must be a C++ (so not PyCppMatrixFloat) type callable from Cython (so not MBT_Matrix<float>)
 public:
 	MBT_RelaxIndexComputer(Bridge_MatrixFloat* matrix);
 	~MBT_RelaxIndexComputer();
